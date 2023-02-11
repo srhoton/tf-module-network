@@ -72,6 +72,6 @@ resource "aws_route" "public_default_route" {
 }
 
 resource "aws_route_table_association" "public_default_route" {
-  subnet_id = module.subnet_addrs.aws_subnet.default_subnets["public-3"]
+  subnet_id = aws_subnet.default_subnets["public-3"].id
   route_table_id = aws_vpc.default_vpc.main_route_table_id
 }
