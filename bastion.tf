@@ -29,6 +29,6 @@ resource "aws_instance" "default_bastion_instance" {
   key_name = var.key_name
 
   tags = {
-    Name = "default_bastion_instance"
+    Name = "${var.env_name}-default_bastion_instance"
   }
 }

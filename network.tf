@@ -36,7 +36,7 @@ module "subnet_addrs" {
 resource "aws_vpc" "default_vpc" { 
   cidr_block = module.subnet_addrs.base_cidr_block
   tags = {
-    Name = "default_vpc"
+    Name = "${var.env_name}-default_vpc"
   }
 }
 
@@ -55,14 +55,14 @@ resource "aws_subnet" "default_subnets" {
 resource "aws_internet_gateway" "default_igw" {
   vpc_id = aws_vpc.default_vpc.id
   tags = {
-    Name = "default_igw"
+    Name = "${var.env_name}-default_igw"
   }
 }
 
 resource "aws_route_table" "default_public_table" {
   vpc_id = aws_vpc.default_vpc.id
   tags = {
-    Name = "default_public_table"
+    Name = "${var.env_name}-default_public_table"
   }
 }
 
@@ -91,7 +91,7 @@ resource "aws_route_table_association" "public_default_route_3" {
 resource "aws_eip" "default_eip" {
   vpc = true
   tags = {
-    Name = "default_eip"
+    Name = "${var.env_name}-default_eip"
   }
 }
   
@@ -99,7 +99,7 @@ resource "aws_nat_gateway" "default_nat" {
   allocation_id = aws_eip.default_eip.id
   subnet_id = aws_subnet.default_subnets["public-1"].id
   tags = {
-    Name = "default_nat"
+    Name = "${var.env_name}-default_nat"
   }
 }
 
@@ -112,7 +112,7 @@ resource "aws_route" "private_default_route" {
 resource "aws_route_table" "default_private_table" {
   vpc_id = aws_vpc.default_vpc.id
   tags = {
-    Name = "default_private_table"
+    Name = "${var.env_name}-default_private_table"
   }
 }
 
