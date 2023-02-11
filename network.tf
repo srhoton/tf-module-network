@@ -71,7 +71,39 @@ resource "aws_route" "public_default_route" {
   gateway_id = aws_internet_gateway.default_igw.id
 }
 
-resource "aws_route_table_association" "public_default_route" {
-  subnet_id = aws_subnet.default_subnets["public-3"].id
+resource "aws_route_table_association" "public_default_route_1" {
+  subnet_id = aws_subnet.default_subnets["public-1"].id
   route_table_id = aws_route_table.default_public_table.id
+}
+
+resource "aws_route_table_association" "public_default_route_2" {
+  subnet_id = aws_subnet.default_subnets["public-2"].id
+  route_table_id = aws_route_table.default_public_table.id
+}
+
+resource "aws_route_table_association" "public_default_route_3" {
+  subnet_id = aws_subnet.default_subnets["public-2"].id
+  route_table_id = aws_route_table.default_public_table.id
+}
+
+resource "aws_route_table" "default_private_table" {
+  vpc_id = aws_vpc.default_vpc.id
+  tags = {
+    Name = "default_private_table"
+  }
+}
+
+resource "aws_route_table_association" "private_default_route_1" {
+  subnet_id = aws_subnet.default_subnets["private-1"].id
+  route_table_id = aws_route_table.default_private_table.id
+}
+
+resource "aws_route_table_association" "private_default_route_2" {
+  subnet_id = aws_subnet.default_subnets["private-2"].id
+  route_table_id = aws_route_table.default_private_table.id
+}
+
+resource "aws_route_table_association" "private_default_route_3" {
+  subnet_id = aws_subnet.default_subnets["private-3"].id
+  route_table_id = aws_route_table.default_private_table.id
 }
