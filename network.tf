@@ -40,10 +40,10 @@ resource "aws_vpc" "default_vpc" {
   }
 }
 
-resource "aws_subnet" "b2c_subnets" {
+resource "aws_subnet" "default_subnets" {
   for_each = module.subnet_addrs.network_cidr_blocks
 
-  vpc_id = aws_vpc.b2c_vpc.id
+  vpc_id = aws_vpc.default_vpc.id
   availability_zone = lookup(var.az_mapping, each.key)
   cidr_block = each.value
   tags = {
@@ -51,15 +51,15 @@ resource "aws_subnet" "b2c_subnets" {
   }
 }
 
-resource "aws_internet_gateway" "b2c_igw" {
-  vpc_id = aws_vpc.b2c_vpc.id
+resource "aws_internet_gateway" "default_igw" {
+  vpc_id = aws_vpc.default_vpc.id
   tags = {
-    Name = "b2c_igw"
+    Name = "default_igw"
   }
 }
 
 #resource "aws_route" "public_default_route" { 
 #  route_table_id = aws_vpc.default_vpc.main_route_table_id
 #  destination_cidr_block = "0.0.0.0/0"
-#  gateway_id = aws_internet_gateway.b2c_igw.id
+#  gateway_id = aws_internet_gateway.default_igw.id
 #}
