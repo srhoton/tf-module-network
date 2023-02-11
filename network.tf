@@ -58,8 +58,20 @@ resource "aws_internet_gateway" "default_igw" {
   }
 }
 
-#resource "aws_route" "public_default_route" { 
-#  route_table_id = aws_vpc.default_vpc.main_route_table_id
-#  destination_cidr_block = "0.0.0.0/0"
-#  gateway_id = aws_internet_gateway.default_igw.id
-#}
+resource "aws_route_table" "default_public_table" {
+  vpc_id = aws_vpc.default_vpc.id
+  tags = {
+    Name = "default_public_table"
+  }
+}
+
+resource "aws_route" "public_default_route" { 
+  route_table_id = aws_vpc.default_vpc.main_route_table_id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id = aws_internet_gateway.default_igw.id
+}
+
+resource "aws_route_table_association" "public_default_route" {
+  subnet_id = module.subnet_addrs.aws_subnet.default_subnets["public-3"]
+  route_table_id = aws_vpc.default_vpc.main_route_table_id
+}
