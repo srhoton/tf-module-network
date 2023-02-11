@@ -51,6 +51,7 @@ resource "aws_subnet" "default_subnets" {
   }
 }
 
+# Public Config
 resource "aws_internet_gateway" "default_igw" {
   vpc_id = aws_vpc.default_vpc.id
   tags = {
@@ -84,6 +85,28 @@ resource "aws_route_table_association" "public_default_route_2" {
 resource "aws_route_table_association" "public_default_route_3" {
   subnet_id = aws_subnet.default_subnets["public-2"].id
   route_table_id = aws_route_table.default_public_table.id
+}
+
+#Private Config
+resource "aws_eip" "default_eip" {
+  vpc = true
+  tags = {
+    Name = "default_eip"
+  }
+}
+  
+resource "aws_nat_gateway" "default_nat" {
+  allocation_id = aws_eip.default_eip.id
+  subnet_id = aws_subnet.default_subnets["public-1"].id
+  tags = {
+    Name = "default_nat"
+  }
+}
+
+resource "aws_route" "private_default_route" { 
+  route_table_id = aws_route_table.default_private_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id = aws_nat_gateway.default_nat.id
 }
 
 resource "aws_route_table" "default_private_table" {
