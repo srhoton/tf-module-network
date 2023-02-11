@@ -16,3 +16,7 @@ variable "az_mapping" {
   }
 }
 
+variable "key_name" {
+  description = "value of the key_name to use for the bastion instance"
+  default = "b2c"
+}
