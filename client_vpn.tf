@@ -15,7 +15,7 @@ data "aws_acm_certificate" "server_vpn_root" {
 
 resource "aws_ec2_client_vpn_endpoint" "client_vpn_endpoint" {
   description = "Client Vpn Endpoint for ${var.env_name}"
-  client_cidr_block = module.subnet_addrs.network_cidr_blocks["private-1"]
+  client_cidr_block = module.subnet_addrs.network_cidr_blocks["vpn-1"]
   split_tunnel = true
   server_certificate_arn = data.aws_acm_certificate.server_vpn_root.arn
 
@@ -52,7 +52,7 @@ resource "aws_security_group" "vpn_access" {
 resource "aws_ec2_client_vpn_network_association" "vpn_subnets" {
 
   client_vpn_endpoint_id = aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id
-  subnet_id = aws_subnet.default_subnets["private-1"].id
+  subnet_id = aws_subnet.default_subnets["private-3"].id
   security_groups = [aws_security_group.vpn_access.id]
 
   lifecycle {
