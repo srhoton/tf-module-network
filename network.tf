@@ -16,7 +16,11 @@ module "subnet_addrs" {
     },
     {
         name = "private-3"
-        new_bits = 4
+        new_bits = 5
+    },
+    {
+        name = "vpn-1"
+        new_bits = 5
     },
     {
         name = "public-1"
