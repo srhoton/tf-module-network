@@ -20,7 +20,7 @@ resource "aws_ec2_client_vpn_endpoint" "client_vpn_endpoint" {
   server_certificate_arn = data.aws_acm_certificate.server_vpn_root.arn
 
   authentication_options {
-    type = "certificate_authentication"
+    type = "certificate-authentication"
     root_certificate_chain_arn = data.aws_acm_certificate.client_vpn_root.arn
   }
   
