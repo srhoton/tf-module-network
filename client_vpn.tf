@@ -3,31 +3,28 @@ data "aws_route53_zone" "client_vpn_zone" {
   private_zone = false
 }
 
-
-resource "aws_acm_certificate" "client_vpn_certificate" {
-  domain_name = "${aws_vpc.default_vpc.id}-vpn.steverhoton.com"
-  validation_method = "DNS"
+data "aws_acm_certificate" "client_vpn_root" {
+  domain = "client.vpn.steverhoton.com"
+  statuses = ["ISSUED"]
 }
 
-resource "aws_route53_record" "client_vpn_record" {
-  for_each = {
-    for dvo in aws_acm_certificate.client_vpn_certificate.domain_validation_options : dvo.domain_name => {
-      name = dvo.resource_record_name
-      record = dvo.resource_record_value
-      type = dvo.resource_record_type
-    }
+data "aws_acm_certificate" "server_vpn_root" {
+  domain = "server.vpn.steverhoton.com"
+  statuses = ["ISSUED"]
+}
+
+resource "aws_ec2_client_vpn_endpoint" "client_vpn_endpoint" {
+  description = "Client Vpn Endpoint for ${var.env_name}"
+  client_cidr_block = module.subnet_addrs.network_cidr_blocks["private-1"]
+  split_tunnel = true
+  server_certificate_arn = data.aws_acm_certificate.server_vpn_root.arn
+
+  authentication_options {
+    type = "certificate_authentication"
+    root_certificate_chain_arn = data.aws_acm_certificate.client_vpn_root.arn
   }
-
-  allow_overwrite = true
-  name = each.value.name
-  records = [each.value.record]
-  ttl = 60
-  type = each.value.type
-  zone_id = data.aws_route53_zone.client_vpn_zone.id
-}
-
-
-resource "aws_acm_certificate_validation" "client_vpn_certificate_validation" {
-  certificate_arn = aws_acm_certificate.client_vpn_certificate.arn
-  validation_record_fqdns = [for record in aws_route53_record.client_vpn_record : record.fqdn]
+  
+  connection_log_options {
+    enabled = false
+  }
 }
