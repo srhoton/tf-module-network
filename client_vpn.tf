@@ -28,3 +28,43 @@ resource "aws_ec2_client_vpn_endpoint" "client_vpn_endpoint" {
     enabled = false
   }
 }
+
+resource "aws_security_group" "vpn_access" {
+  vpc_id = aws_vpc.default_vpc.id
+  name = "${var.env_name}-vpn-access"
+
+  ingress {
+    from_port = 443
+    protocol = "UDP"
+    to_port = 443
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Incoming VPN connection"
+  }
+
+  egress {
+    from_port = 0
+    protocol = "-1"
+    to_port = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_ec2_client_vpn_network_association" "vpn_subnets" {
+
+  client_vpn_endpoint_id = aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id
+  subnet_id = aws_subnet.default_subnets["private-1"].id
+  security_groups = [aws_security_group.vpn_access.id]
+
+  lifecycle {
+    // The issue why we are ignoring changes is that on every change
+    // terraform screws up most of the vpn assosciations
+    // see: https://github.com/hashicorp/terraform-provider-aws/issues/14717
+    ignore_changes = [subnet_id]
+  }
+}
+
+resource "aws_ec2_client_vpn_authorization_rule" "vpn_auth_rule" {
+  client_vpn_endpoint_id = aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id
+  target_network_cidr = aws_vpc.default_vpc.cidr_block
+  authorize_all_groups = true
+}
