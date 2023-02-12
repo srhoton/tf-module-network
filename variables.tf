@@ -9,6 +9,7 @@ variable "az_mapping" {
     "private-1" = "us-east-1a"
     "private-2" = "us-east-1b"
     "private-3" = "us-east-1c"
+    "vpn-1" = "us-east-1c"
     "public-1" = "us-east-1a"
     "public-2" = "us-east-1b"
     "public-3" = "us-east-1c"
