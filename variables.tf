@@ -26,3 +26,9 @@ variable "env_name" {
   description = "The environment name"
   default = "srhoton-dev"
 }
+
+variable "enable_nat_gateway" {
+  description = "Enable NAT Gateway"
+  default = true
+}
+  

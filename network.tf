@@ -100,6 +100,7 @@ resource "aws_eip" "default_eip" {
 }
   
 resource "aws_nat_gateway" "default_nat" {
+  count = var.enable_nat_gateway ? 1 : 0
   allocation_id = aws_eip.default_eip.id
   subnet_id = aws_subnet.default_subnets["public-1"].id
   tags = {
