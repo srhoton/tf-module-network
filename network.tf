@@ -109,9 +109,10 @@ resource "aws_nat_gateway" "default_nat" {
 }
 
 resource "aws_route" "private_default_route" { 
+  count = var.enable_nat_gateway ? 1 : 0
   route_table_id = aws_route_table.default_private_table.id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id = aws_nat_gateway.default_nat.id
+  nat_gateway_id = aws_nat_gateway.default_nat[0].id
 }
 
 resource "aws_route_table" "default_private_table" {
