@@ -56,7 +56,7 @@ resource "aws_ec2_client_vpn_network_association" "vpn_subnets" {
   count = var.enable_vpn ? 1 : 0
   client_vpn_endpoint_id = aws_ec2_client_vpn_endpoint.client_vpn_endpoint[0].id
   subnet_id = aws_subnet.default_subnets["private-3"].id
-  security_groups = [aws_security_group.vpn_access.id]
+  security_groups = [aws_security_group[0].vpn_access.id]
 
   lifecycle {
     // The issue why we are ignoring changes is that on every change
