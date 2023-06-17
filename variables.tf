@@ -32,3 +32,8 @@ variable "enable_nat_gateway" {
   default = true
 }
   
+variable "enable_vpn" {
+  description = "Enable VPN Gateway"
+  default = false
+}
+  
