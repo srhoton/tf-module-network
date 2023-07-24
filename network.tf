@@ -49,6 +49,7 @@ resource "aws_subnet" "default_subnets" {
 
   vpc_id = aws_vpc.default_vpc.id
   availability_zone = lookup(var.az_mapping, each.key)
+  map_public_ip_on_launch = lookup(var.public_ip_mapping, each.key)
   cidr_block = each.value
   tags = {
     Name = each.key

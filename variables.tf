@@ -17,6 +17,19 @@ variable "az_mapping" {
   }
 }
 
+variable "public_ip_mapping" {
+  description = "AZ names to their public ip setup"
+  default = {
+    "private-1" = false
+    "private-2" = false
+    "private-3" = false
+    "vpn-1" = false
+    "public-1" = true
+    "public-2" = true
+    "public-3" = true
+
+  }
+}
 variable "key_name" {
   description = "value of the key_name to use for the bastion instance"
   default = "b2c"
