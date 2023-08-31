@@ -1,14 +1,17 @@
 data "aws_route53_zone" "client_vpn_zone" {
+  count = var.enable_vpn ? 1 : 0
   name = "steverhoton.com"
   private_zone = false
 }
 
 data "aws_acm_certificate" "client_vpn_root" {
+  count = var.enable_vpn ? 1 : 0
   domain = "client.vpn.steverhoton.com"
   statuses = ["ISSUED"]
 }
 
 data "aws_acm_certificate" "server_vpn_root" {
+  count = var.enable_vpn ? 1 : 0
   domain = "server.vpn.steverhoton.com"
   statuses = ["ISSUED"]
 }
